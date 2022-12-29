@@ -3,7 +3,6 @@ package wsmapping
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -20,25 +19,19 @@ type wsMapping struct {
 	redis *redis.Client
 }
 
-func (ws *wsMapping) keyGenerator(device string, key string) string {
-	return fmt.Sprintf("%s.%s", device, key)
-}
-
 func (ws *wsMapping) AddWSClientMapping(
 	ctx context.Context,
 	clientID string,
-	device string,
-	key string,
+	sign string,
 	ip string,
 ) error {
-	redisKey := ws.keyGenerator(device, key)
 	wsMapping, err := ws.getClientDataFromRedis(ctx, clientID)
 
 	if err != nil {
 		return err
 	}
 
-	wsMapping[redisKey] = clientMapping{IP: ip}
+	wsMapping[sign] = clientMapping{IP: ip}
 	data, err := json.Marshal(wsMapping)
 
 	if err != nil {
@@ -51,17 +44,15 @@ func (ws *wsMapping) AddWSClientMapping(
 func (ws *wsMapping) RemoveWSClientMapping(
 	ctx context.Context,
 	clientID string,
-	device string,
-	key string,
+	sign string,
 ) error {
-	redisKey := ws.keyGenerator(device, key)
-	wsMapping, err := ws.getClientDataFromRedis(ctx, clientID)
 
+	wsMapping, err := ws.getClientDataFromRedis(ctx, clientID)
 	if err != nil {
 		return err
 	}
 
-	delete(wsMapping, redisKey)
+	delete(wsMapping, sign)
 	data, err := json.Marshal(wsMapping)
 
 	if err != nil {

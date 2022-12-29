@@ -57,8 +57,7 @@ func (a *auth) serveConnect(
 	return a.wsmapping.AddWSClientMapping(
 		ctx,
 		connectDTO.ClientID,
-		connectDTO.Device,
-		connectDTO.Key,
+		connectDTO.Sign,
 		connectDTO.SocketIP,
 	)
 }

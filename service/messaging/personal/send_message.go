@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/william22913/chat-api/dto/out"
-	"github.com/william22913/chat-api/messaging"
+	"github.com/william22913/chat-api/message"
 )
 
 func (pc *personalChatService) SendMessage(
@@ -13,7 +13,7 @@ func (pc *personalChatService) SendMessage(
 ) {
 	action := "personal.service"
 	var err error
-	var message messaging.Message
+	var msg message.Message
 	var response interface{}
 
 	defer func() {
@@ -26,17 +26,17 @@ func (pc *personalChatService) SendMessage(
 		)
 	}()
 
-	err = pc.UnmarshalMessage(r, &message)
+	err = pc.UnmarshalMessage(r, &msg)
 	if err != nil {
 		return
 	}
 
-	err = message.Validate()
+	err = msg.Validate()
 	if err != nil {
 		return
 	}
 
-	pc.router.ProcessMessage(message)
+	pc.router.ProcessMessage(msg)
 
 	response = out.DefaultResponse{
 		Success: true,

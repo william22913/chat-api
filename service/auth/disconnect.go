@@ -57,7 +57,6 @@ func (a *auth) serveDisconnect(
 	return a.wsmapping.RemoveWSClientMapping(
 		ctx,
 		connectDTO.ClientID,
-		connectDTO.Device,
-		connectDTO.Key,
+		connectDTO.Sign,
 	)
 }

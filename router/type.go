@@ -2,23 +2,23 @@ package router
 
 import (
 	wsmapping "github.com/william22913/chat-api/mapping/ws-mapping"
-	"github.com/william22913/chat-api/messaging"
+	"github.com/william22913/chat-api/message"
 )
 
 type SpecificRouter interface {
-	GetClient(messaging.Message) (
+	GetClient(message.Message) (
 		map[string]wsmapping.WSClientMapping,
 		error,
 	)
 
-	ProcessMessage(messaging.Message)
+	ProcessMessage(message.Message)
 
 	StopListen()
 }
 
 type Router interface {
 	SubscribeMessage(
-		f func(messaging.Message) (
+		f func(message.Message) (
 			map[string]wsmapping.WSClientMapping,
 			error,
 		),
@@ -26,5 +26,5 @@ type Router interface {
 
 	UnsubscribeMessage()
 
-	ProcessMessage(messaging.Message)
+	ProcessMessage(message.Message)
 }

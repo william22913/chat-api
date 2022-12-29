@@ -10,7 +10,7 @@ import (
 	"github.com/william22913/chat-api/pkg/redis"
 	"github.com/william22913/chat-api/router/personal"
 	"github.com/william22913/chat-api/service/auth"
-	personalSrv "github.com/william22913/chat-api/service/message/personal"
+	personalSrv "github.com/william22913/chat-api/service/messaging/personal"
 )
 
 func main() {

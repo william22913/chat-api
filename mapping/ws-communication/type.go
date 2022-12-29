@@ -1,20 +1,14 @@
 package wscommunication
 
 import (
-	"context"
-
 	wsmapping "github.com/william22913/chat-api/mapping/ws-mapping"
-	"github.com/william22913/chat-api/messaging"
+	"github.com/william22913/chat-api/message"
 )
 
 type Wscommunication interface {
-	SendMessageToClient(
-		ctx context.Context,
-		message messaging.Message,
-	)
-
 	SendMessageWithMapping(
 		mapping wsmapping.WSClientMapping,
-		message messaging.Message,
+		client_id string,
+		message message.Message,
 	)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/william22913/chat-api/config"
 	"github.com/william22913/chat-api/service/auth"
-	"github.com/william22913/chat-api/service/message/personal"
+	"github.com/william22913/chat-api/service/messaging/personal"
 )
 
 func StartHttpService(

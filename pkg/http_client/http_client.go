@@ -19,19 +19,14 @@ func HitAPI(
 ) {
 
 	//TODO ADD METRIX
-	payloadBuf := new(bytes.Buffer)
-	err := json.NewEncoder(payloadBuf).Encode(body)
+	bodyByte, _ := json.Marshal(body)
+
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(bodyByte))
 	if err != nil {
 		return 0, err
 	}
 
-	req, err := http.NewRequest(method, url, payloadBuf)
-	if err != nil {
-		return 0, err
-	}
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return 0, err
 	}

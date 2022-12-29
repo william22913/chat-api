@@ -1,4 +1,4 @@
-package messaging
+package message
 
 import (
 	"time"
@@ -22,12 +22,12 @@ type Message struct {
 	Order         interface{} `json:"order"`
 	Time          time.Time   `json:"time"`
 	Type          MessageType `json:"type"`
-	Receiver      Receiver    `json:"receiver"`
+	Identity      Identity    `json:"identity"`
 }
 
-type Receiver struct {
-	Device string `json:"device"`
-	Key    string `json:"key"`
+type Identity struct {
+	ClientID string `json:"client_id"`
+	Sign     string `json:"sign"`
 }
 
 func (m *Message) Validate() error {

@@ -1,14 +1,12 @@
 package wscommunication
 
 import (
-	"context"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/rs/zerolog/log"
 	wsmapping "github.com/william22913/chat-api/mapping/ws-mapping"
-	"github.com/william22913/chat-api/messaging"
+	"github.com/william22913/chat-api/message"
 	httpclient "github.com/william22913/chat-api/pkg/http_client"
 )
 
@@ -24,32 +22,17 @@ type wscommunication struct {
 	clientMapping wsmapping.WSMapping
 }
 
-func (ws *wscommunication) SendMessageToClient(
-	ctx context.Context,
-	message messaging.Message,
-) {
-	mapping, err := ws.clientMapping.GetWsClientMapping(ctx, message.SourceID)
-	if err != nil {
-		log.Error().
-			Caller().
-			Interface("message", message).
-			Str("client", message.SourceID).
-			Err(err).
-			Msg("error when get ws client mapping")
-	}
-
-	ws.SendMessageWithMapping(mapping, message)
-}
-
 func (ws *wscommunication) SendMessageWithMapping(
 	mapping wsmapping.WSClientMapping,
-	message messaging.Message,
+	client_id string,
+	message message.Message,
 ) {
 	for key := range mapping {
 		wsConn := mapping[key]
 		ws.sendToWS(
 			wsConn.IP,
 			key,
+			client_id,
 			message,
 		)
 	}
@@ -58,25 +41,23 @@ func (ws *wscommunication) SendMessageWithMapping(
 func (ws *wscommunication) sendToWS(
 	ip string,
 	key string,
-	message messaging.Message,
+	client_id string,
+	msg message.Message,
 ) {
-	wsURL := fmt.Sprintf("http://%s:8001/message/send", ip)
+	wsURL := fmt.Sprintf("http://%s:8003/message/send", ip)
 	header := make(map[string]string)
 	wsResult := make(map[string]interface{})
 
-	keys := strings.Split(key, ".")
-	if len(keys) == 2 {
-		message.Receiver = messaging.Receiver{
-			Device: keys[0],
-			Key:    keys[1],
-		}
+	msg.Identity = message.Identity{
+		ClientID: client_id,
+		Sign:     key,
 	}
 
 	httpCode, err := httpclient.HitAPI(
 		http.MethodPost,
 		wsURL,
 		header,
-		message,
+		msg,
 		&wsResult,
 	)
 

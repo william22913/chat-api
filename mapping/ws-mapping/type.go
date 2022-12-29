@@ -12,16 +12,14 @@ type WSMapping interface {
 	AddWSClientMapping(
 		ctx context.Context,
 		clientID string,
-		device string,
-		key string,
+		sign string,
 		ip string,
 	) error
 
 	RemoveWSClientMapping(
 		ctx context.Context,
 		clientID string,
-		device string,
-		key string,
+		sign string,
 	) error
 
 	GetWsClientMapping(
