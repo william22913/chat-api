@@ -7,8 +7,8 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/william22913/chat-api/config"
-	"github.com/william22913/chat-api/dto/out"
-	srvErr "github.com/william22913/chat-api/pkg/error"
+	"github.com/william22913/common/dto/out"
+	srvErr "github.com/william22913/common/error"
 )
 
 type Service struct {

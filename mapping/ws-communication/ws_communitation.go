@@ -7,19 +7,22 @@ import (
 	"github.com/rs/zerolog/log"
 	wsmapping "github.com/william22913/chat-api/mapping/ws-mapping"
 	"github.com/william22913/chat-api/message"
-	httpclient "github.com/william22913/chat-api/pkg/http_client"
+	httpclient "github.com/william22913/common/http_client"
 )
 
 func NewWscommunication(
 	clientMapping wsmapping.WSMapping,
+	httpClient httpclient.APIConnector,
 ) Wscommunication {
 	return &wscommunication{
 		clientMapping: clientMapping,
+		httpClient:    httpClient,
 	}
 }
 
 type wscommunication struct {
 	clientMapping wsmapping.WSMapping
+	httpClient    httpclient.APIConnector
 }
 
 func (ws *wscommunication) SendMessageWithMapping(
@@ -44,7 +47,10 @@ func (ws *wscommunication) sendToWS(
 	client_id string,
 	msg message.Message,
 ) {
-	wsURL := fmt.Sprintf("http://%s:8003/message/send", ip)
+	host := fmt.Sprintf("http://%s:8003", ip)
+	path := "/message/send"
+
+	wsURL := fmt.Sprintf("%s%s", host, path)
 	header := make(map[string]string)
 	wsResult := make(map[string]interface{})
 
@@ -53,9 +59,10 @@ func (ws *wscommunication) sendToWS(
 		Sign:     key,
 	}
 
-	httpCode, err := httpclient.HitAPI(
+	httpCode, err := ws.httpClient.HitAPI(
 		http.MethodPost,
-		wsURL,
+		host,
+		path,
 		header,
 		msg,
 		&wsResult,

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/william22913/chat-api/dto/in"
-	"github.com/william22913/chat-api/dto/out"
+	"github.com/william22913/common/dto/out"
 )
 
 func (a *auth) ClientConnect(

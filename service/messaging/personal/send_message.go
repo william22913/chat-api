@@ -3,8 +3,8 @@ package personal
 import (
 	"net/http"
 
-	"github.com/william22913/chat-api/dto/out"
 	"github.com/william22913/chat-api/message"
+	"github.com/william22913/common/dto/out"
 )
 
 func (pc *personalChatService) SendMessage(

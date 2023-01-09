@@ -14,4 +14,14 @@ type AuthService interface {
 		w http.ResponseWriter,
 		r *http.Request,
 	)
+
+	Error(
+		w http.ResponseWriter,
+		r *http.Request,
+	)
+
+	Error2(
+		w http.ResponseWriter,
+		r *http.Request,
+	)
 }

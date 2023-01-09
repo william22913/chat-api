@@ -11,14 +11,25 @@ import (
 	"github.com/william22913/chat-api/router/personal"
 	"github.com/william22913/chat-api/service/auth"
 	personalSrv "github.com/william22913/chat-api/service/messaging/personal"
+	"github.com/william22913/common/http_client"
+	"github.com/william22913/common/metric_middleware"
+	"github.com/william22913/common/metrics"
 )
 
 func main() {
 
 	config := config.AppConfig
 	redis := redis.GetRedisConnection(config.Redis)
+	metrics := metrics.NewMetrics()
+
+	httpClient := http_client.NewAPIConnector(metrics)
+	metrics_middleware := metric_middleware.NewMetricMiddleware(metrics)
+
 	wsMapping := wsmapping.NewWSMapping(redis)
-	wsComm := wscommunication.NewWscommunication(wsMapping)
+	wsComm := wscommunication.NewWscommunication(
+		wsMapping,
+		httpClient,
+	)
 
 	personalRouter := personal.NewPersonalChatRouter(
 		wsMapping,
@@ -37,6 +48,7 @@ func main() {
 		config,
 		authService,
 		personalRouterService,
+		metrics_middleware,
 	)
 
 	if err != nil {
